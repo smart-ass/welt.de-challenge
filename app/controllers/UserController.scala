@@ -12,15 +12,15 @@ class UserController @Inject()(cc: ControllerComponents,
                                userService: UserService) extends AbstractController(cc) {
 
   def getUser(id: Int): Action[AnyContent] = Action.async {
-    userService.getUserData(id).map {
+    userService.getUserWithPosts(id).map {
       case Some(user)=> Ok(Json.toJson(user))
       case None => NotFound
     }
   }
 
   def getAllUsers: Action[AnyContent] = Action.async {
-    userService.getUsersData.map {
-      case Some(users)=> Ok(Json.toJson(users))
+    userService.getUsersWithPosts.map {
+      case Some(usersWithPosts)=> Ok(Json.toJson(usersWithPosts))
       case None => NotFound
     }
   }
