@@ -2,14 +2,13 @@ package api_client
 
 import conf.AppConf
 import javax.inject.{Inject, Singleton}
-import play.api.http.Status
-import play.api.libs.json.{JsArray, JsObject, JsValue, Reads}
-import play.api.libs.ws.{WSClient, WSResponse}
+import play.api.libs.json.{JsArray, JsObject}
+import play.api.libs.ws.WSClient
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class UserApi @Inject()(wsClient: WSClient, appConf: AppConf) {
+class UserApi @Inject()(wsClient: WSClient, appConf: AppConf) extends JsonApi  {
 
   private val apiUrl = s"${appConf.userApiUrl}users"
 
@@ -42,11 +41,4 @@ class UserApi @Inject()(wsClient: WSClient, appConf: AppConf) {
     ???
   }
 
-  private def parseJsonBody[T: Reads](response: WSResponse): Option[T] = {
-    response.status match {
-      case Status.OK => response.body[JsValue].asOpt[T]
-      case Status.NOT_FOUND => None
-      case _ => throw new RuntimeException(s"Unexpected response: status=${response.status}; body=${response.body}")
-    }
-  }
 }
